@@ -67,7 +67,7 @@ class Delivery:
 
 def main():
     Wasim = player("Wasim Akram", 70, 95, 75)
-    Sachin = player("Sachin Tendulkar", 95, 65, 70)
+    Sachin = player("Sachin Tendulkar", 95, 63, 70)
     Game = Delivery()
     Delivery.bowl_delivery( Wasim, Sachin)
 
