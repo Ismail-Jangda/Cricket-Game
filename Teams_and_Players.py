@@ -11,6 +11,7 @@
 
 # ("Player_Name", Bat_Skill=0, Bowl_Skill=0, Field_Skill = 0, Fitness=0, Batting_Order=0, Playing_Role="")
 Team_Pakistan=[ 
+    ["Pakistan", "Imran Khan", 6],
     ["Saeed Anwar", 84, 25, 80, 100, 1, "Spin"],
     ["Zaheer Abbas", 90, 10, 85, 90, 2, "Spin"],
     ["Babar Azam", 95, 35, 94, 95, 3, "Spin"],
@@ -25,6 +26,7 @@ Team_Pakistan=[
     ]
     
 Team_India=[ 
+    ["India", "Kapil Dev", 6],
     ["Rohit Sharma", 87, 25, 85, 90, 1, "Spin"],
     ["Sachin Tendulkar", 95, 45, 75, 90, 2, "Spin"],
     ["Sourav Ganguly", 77, 55, 85, 90, 3, "Fast"],
