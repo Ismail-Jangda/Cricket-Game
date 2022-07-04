@@ -16,24 +16,37 @@ over_number = 0
 avg_fielding = 0
 #This variable defines the fielder selected
 fielder = ""
+#This list keeps track of bowling figures for innings 1:
+#["Bowler Name", "Overs Bowled", Runs Given Away, Wickets Taken, Current Fitness ]
+BowlingScoreCard_i1 = []
+
+#This list keeps track of bowling figures for innings 2:
+BowlingScoreCard_i2 = []
+
+#This is Current Bowler name
+current_bowler = ""
+
+
+
 
 #This class defines the player. I need to add fitness to this. 
 class player:
-    def __init__ (self, name = "Player_Name", Bat_Skill=0, Bowl_Skill=0, Field_Skill = 0, Fitness_Skill = 0):
+    def __init__ (self, name = "Player_Name", Bat_Skill=0, Bowl_Skill=0, Field_Skill = 0, Fitness_Skill = 0, Fitness_Reduction = 0):
         self.name = name
         self.Bat_Skill = Bat_Skill
         self.Bowl_Skill = Bowl_Skill
         self.Field_Skill = Field_Skill
         self.Fitness_Skill = Fitness_Skill
+        self.Fitness_Reduction = Fitness_Reduction
 
     #This function randomizes the batting points for that one particular delivery. Should be normalized with the bat skill being the mean
     def Batting(self):
-        Batting_Points = self.Bat_Skill + random.randint(-50,50)
+        Batting_Points = (self.Bat_Skill + (self.Fitness_Skill/2))/1.5 + random.randint(-30,30)
         return Batting_Points
 
     #This function randomizes the bowling points for that one particular delivery. Should be normalized with the bat skill being the mean
     def Bowling(self):
-        Bowling_Points = self.Bowl_Skill + random.randint(-50,50)
+        Bowling_Points = (self.Bowl_Skill + (self.Fitness_Skill/2))/1.5  + random.randint(-30,30)
         return Bowling_Points
 
 def field_check(bowling_team, difficulty, keeper):
@@ -60,12 +73,6 @@ def field_check(bowling_team, difficulty, keeper):
     else:
         return "failed"
     
-
-
-
-
-
-
 #This function should complete 1 delivery and make the necessary outcomes and update all statistics for that one ball.
 def bowl_delivery(batsman, bowler, bowling_team):
     global BatsmanScore
@@ -155,6 +162,7 @@ def play_innings(batting_team, bowling_team):
     global over_number
     global wickets
     global score
+    global BatsmanScore
     for y in range(20):
         bowl_over(batting_team, bowling_team)
         over_number += 1
@@ -163,33 +171,71 @@ def play_innings(batting_team, bowling_team):
             wickets = 0
             score = 0
             return
+    
+    
 
 def bowl_over(batting_team, bowling_team):
     global over_number
+    global current_bowler
+    bowler = pick_bowler(bowling_team)
+    print("\n{} is the new bowler".format(current_bowler))
     for x in range(6):
-        print("\n Over: {}.{}".format(over_number, x+1) )
-        batsman = player(batting_team[wickets+1][0], batting_team[wickets+1][1],batting_team[wickets+1][2], batting_team[wickets+1][3], batting_team[wickets+1][4])
-        bowler = player(bowling_team[9][0], bowling_team[9][1], bowling_team[9][2], bowling_team[9][3], bowling_team[9][4])
+        print("\nOver: {}.{}".format(over_number, x+1) ) 
+        batsman = player(batting_team[wickets+1][0], batting_team[wickets+1][1],batting_team[wickets+1][2], batting_team[wickets+1][3], batting_team[wickets+1][4], batting_team[wickets+1][7])
         bowl_delivery(batsman, bowler, bowling_team)
+
         if wickets == 10:
-            print("This closes the innings. The batting team was able to score {}".format(score))
             return
     print("At the end of the over, the score is {} for {}".format(score, wickets))
+    for x in range(1,12):
+        if current_bowler == bowling_team[x][0]:
+            bowling_team[x][7] += 5
+        if bowling_team[x][7] != 0:
+           bowling_team[x][7] - 1 
 
 
-
+#Bowling skill is done twice. Once above - and once now. 
+def pick_bowler(bowling_team):
+    Bowl_Skill = 0
+    global current_bowler
+    for x in range(1,12):
+        if ((bowling_team[x][2] + ((bowling_team[x][4]-bowling_team[x][7])/2))/1.5) > Bowl_Skill:
+            if current_bowler != bowling_team[x][0]:
+                Bowl_Skill = ((bowling_team[x][2] + ((bowling_team[x][4]-bowling_team[x][7])/2))/1.5) 
+                bowler = player(bowling_team[x][0], bowling_team[x][1], bowling_team[x][2], bowling_team[x][3], bowling_team[x][4], bowling_team[x][7])
+                best_bowler = bowling_team[x][0]
+    current_bowler = best_bowler
+    return bowler
 def play_game(team1, team2):
     global avg_fielding
+    global over_number
+    global wickets
+    global score
+    global BatsmanScore
     for items in range(1, 12):
         avg_fielding = avg_fielding + team1[items][3] + team2[items][3]
     avg_fielding = avg_fielding/22
+    over_number = 0
+    wickets = 0
+    score = 0
+    BatsmanScore = 0
     if random.randint(0,1) == 0:
         print("{} won the toss and has decided to bat first".format(team1[0][1]))
         play_innings(team1, team2)
+        print("This closes the innings. {} have to make {} at a run rate of {} to win the game.".format(score, team2[0][0], score+1, (score+1)/20))
+        over_number = 0
+        wickets = 0
+        score = 0
+        BatsmanScore = 0
         play_innings(team2, team1)
     else:
         print("{} won the toss and has decided to bat first".format(team2[0][1]))
         play_innings(team2, team1)
+        print("This closes the innings. {} have to make {} at a run rate of {} to win the game.".format(score, team1[0][0], score+1, (score+1)/20))
+        over_number = 0
+        wickets = 0
+        score = 0
+        BatsmanScore = 0
         play_innings(team1, team2)   
 
 def main():
