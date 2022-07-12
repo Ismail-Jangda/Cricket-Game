@@ -2,6 +2,7 @@
 
 import random
 import math
+import sys
 from Teams_and_Players import Team_Pakistan, Team_India
 
 #This variable keeps the overall score
@@ -16,16 +17,19 @@ over_number = 0
 avg_fielding = 0
 #This variable defines the fielder selected
 fielder = ""
-#This list keeps track of bowling figures for innings 1:
+
+#This list keeps track of bowling figures:
 #["Bowler Name", "Overs Bowled", Runs Given Away, Wickets Taken, Current Fitness ]
 BowlingScoreCard_i1 = []
 
-#This list keeps track of bowling figures for innings 2:
+#This list keeps track of the scorecard:
 BowlingScoreCard_i2 = []
 
 #This is Current Bowler name
 current_bowler = ""
 
+
+f = open(r"C:\Users\Standard User\Google Drive\02 Personal Items\Python\Cricket-Game\Commentary", "a")
 
 
 
@@ -85,78 +89,78 @@ def bowl_delivery(batsman, bowler, bowling_team):
     if point_differential >= 80:
         score += 6
         BatsmanScore += 6
-        print ("SIX! MASSIVE HIT. {} just picks it up and deposits over the boundary".format(batsman.name))
+        print ("SIX! MASSIVE HIT. {} just picks it up and deposits over the boundary".format(batsman.name), file=f)
     elif point_differential >= 60:
         score += 4
         BatsmanScore += 4
-        print("FOUR! Slashes between point and the slip fielders.")
+        print("FOUR! Slashes between point and the slip fielders.", file=f)
     elif point_differential >= 50:
         if field_check(bowling_team, "easy", "n") == "passed":
             score +=3
             BatsmanScore +=3
-            print("Batsman has scored 3 runs. {} puts in a dive to stop the boundary". format(fielder))
+            print("Batsman has scored 3 runs. {} puts in a dive to stop the boundary". format(fielder), file=f)
         else:
             score +=4
             BatsmanScore +=4
-            print("FOUR! {} has bungled an easy stop. Gives away an extra run.".format(fielder))           
+            print("FOUR! {} has bungled an easy stop. Gives away an extra run.".format(fielder), file=f)           
     elif point_differential >= 30:
         if field_check(bowling_team, "easy", "n") == "passed":
             score +=2
             BatsmanScore +=2
-            print("Stopped at long off. Good running by {} to get to the ball. 2 runs added to the score".format(fielder))
+            print("Stopped at long off. Good running by {} to get to the ball. 2 runs added to the score".format(fielder), file=f)
         else:
             score +=4
             BatsmanScore +=4
-            print("{} isn't paying attention here. Ball slips through his fingers, and gives away a four instead of 2 runs.".format(fielder))
+            print("{} isn't paying attention here. Ball slips through his fingers, and gives away a four instead of 2 runs.".format(fielder), file=f)
     elif point_differential >= 0:
         if field_check(bowling_team, "easy", "n") == "passed":
             score +=1
             BatsmanScore +=1
-            print("Driven straight to the man at deep midwicket. Good throw by {} to keep the batsman at 1 run".format(fielder))
+            print("Driven straight to the man at deep midwicket. Good throw by {} to keep the batsman at 1 run".format(fielder), file=f)
         else:
             score +=4
             BatsmanScore +=4
-            print("{} drives it straight to {} who lets the ball go between his legs. A single at best is now a four.".format(batsman.name, fielder))
+            print("{} drives it straight to {} who lets the ball go between his legs. A single at best is now a four.".format(batsman.name, fielder), file=f)
     elif point_differential >= -30:
-        print("Dot ball. No runs added.")
+        print("Dot ball. No runs added.", file=f)
     elif point_differential <= -85: 
-        print("Wicket! Taken! {} has bowled a wonderful delivery and has completely and utterly bamboozled {}".format(bowler.name, batsman.name))
-        print("{}       b       {}     {}".format(batsman.name, bowler.name, BatsmanScore))
+        print("Wicket! Taken! {} has bowled a wonderful delivery and has completely and utterly bamboozled {}".format(bowler.name, batsman.name), file=f)
+        print("{}       b       {}     {}".format(batsman.name, bowler.name, BatsmanScore), file=f)
         wickets += 1
         BatsmanScore = 0
     elif point_differential <= -65:
         wicket_chance = random.randint(-50,60)
         if wicket_chance >= 0:
-            print("Loud appeal for an LBW, looks plumb... AND ITS GIVEN! {} heads back to the pavilion".format(batsman.name))
-            print("{}       lbw       {}     {}".format(batsman.name, bowler.name, BatsmanScore))
+            print("Loud appeal for an LBW, looks plumb... AND ITS GIVEN! {} heads back to the pavilion".format(batsman.name), file=f)
+            print("{}       lbw       {}     {}".format(batsman.name, bowler.name, BatsmanScore), file=f)
             wickets += 1
             BatsmanScore = 0
         else:
-            print("The bowling side have all gone up to appeal this, but not given. Umpire indicating that the delivery was a bit high.") 
+            print("The bowling side have all gone up to appeal this, but not given. Umpire indicating that the delivery was a bit high.", file=f) 
     elif point_differential <= -50:
         wicket_chance = random.randint(-50,50)
         if wicket_chance >= 0:
             if field_check(bowling_team, 'medium', "y") == "passed":
-                print("Edged, and TAKEN! Excellent catch by the wicket keeper! {} shaking his head in disgust. What an unnecessary dismissal".format(batsman.name))
-                print("{}   c   {}   b   {}     {}".format(batsman.name, fielder, bowler.name, BatsmanScore))
+                print("Edged, and TAKEN! Excellent catch by the wicket keeper! {} shaking his head in disgust. What an unnecessary dismissal".format(batsman.name), file=f)
+                print("{}   c   {}   b   {}     {}".format(batsman.name, fielder, bowler.name, BatsmanScore), file=f)
                 wickets += 1
                 BatsmanScore = 0
             else:
-                print("DROPPED! Regulation catch dropped by the keeper. {} looks distraught. That really should be taken at this level of game play.".format(bowler.name))             
+                print("DROPPED! Regulation catch dropped by the keeper. {} looks distraught. That really should be taken at this level of game play.".format(bowler.name), file=f)             
         else:
-            print("EDGED! and bounced before the keeper. Lucky reprieve. ")
+            print("EDGED! and bounced before the keeper. Lucky reprieve. ", file=f)
     elif point_differential <= -31:
         wicket_chance = random.randint(-50,50)
         if wicket_chance >= 0:
             if field_check(bowling_team, 'hard', "n") == "passed":
-                print("WHAT A CATCH!! {} slashed the ball through point, and {} leapt to pouch and incredible catch. Fortunate breakthrough by {}".format( batsman.name, fielder, bowler.name))
-                print("{}   c   {}   b   {}     {}".format(batsman.name, fielder, bowler.name, BatsmanScore))
+                print("WHAT A CATCH!! {} slashed the ball through point, and {} leapt to pouch and incredible catch. Fortunate breakthrough by {}".format( batsman.name, fielder, bowler.name), file=f)
+                print("{}   c   {}   b   {}     {}".format(batsman.name, fielder, bowler.name, BatsmanScore), file=f)
                 wickets += 1
                 BatsmanScore = 0
             else:
-                print("OOF! A chance there slips through the fingers of {}. Was a difficult chance, but {} isn't happy about it.".format(fielder, bowler.name))             
+                print("OOF! A chance there slips through the fingers of {}. Was a difficult chance, but {} isn't happy about it.".format(fielder, bowler.name), file=f)             
         else:
-            print("{} put alot of power in that shot, and the fielder did well to just stop it. Would've been a chance if the fielder was brought in a couple of paces.".format(batsman.name, bowler.name))     
+            print("{} put alot of power in that shot, and the fielder did well to just stop it. Would've been a chance if the fielder was brought in a couple of paces.".format(batsman.name, bowler.name), file=f)     
 
 def play_innings(batting_team, bowling_team):
     global over_number
@@ -178,15 +182,15 @@ def bowl_over(batting_team, bowling_team):
     global over_number
     global current_bowler
     bowler = pick_bowler(bowling_team)
-    print("\n{} is the new bowler".format(current_bowler))
+    print("\n{} is the new bowler".format(current_bowler), file=f)
     for x in range(6):
-        print("\nOver: {}.{}".format(over_number, x+1) ) 
+        print("Over: {}.{}".format(over_number, x+1), file=f ) 
         batsman = player(batting_team[wickets+1][0], batting_team[wickets+1][1],batting_team[wickets+1][2], batting_team[wickets+1][3], batting_team[wickets+1][4], batting_team[wickets+1][7])
         bowl_delivery(batsman, bowler, bowling_team)
 
         if wickets == 10:
             return
-    print("At the end of the over, the score is {} for {}".format(score, wickets))
+    print("At the end of the over, the score is {} for {}".format(score, wickets), file=f)
     for x in range(1,12):
         if current_bowler == bowling_team[x][0]:
             bowling_team[x][7] += 5
@@ -197,6 +201,7 @@ def bowl_over(batting_team, bowling_team):
 #Bowling skill is done twice. Once above - and once now. 
 def pick_bowler(bowling_team):
     Bowl_Skill = 0
+    bowler_found = False
     global current_bowler
     for x in range(1,12):
         if ((bowling_team[x][2] + ((bowling_team[x][4]-bowling_team[x][7])/2))/1.5) > Bowl_Skill:
@@ -205,6 +210,14 @@ def pick_bowler(bowling_team):
                 bowler = player(bowling_team[x][0], bowling_team[x][1], bowling_team[x][2], bowling_team[x][3], bowling_team[x][4], bowling_team[x][7])
                 best_bowler = bowling_team[x][0]
     current_bowler = best_bowler
+    #check over of current bowler
+    for x in range(len(BowlingScoreCard_i1)):
+        if BowlingScoreCard_i1[x][0] == current_bowler:
+            BowlingScoreCard_i1[x][1] += 1
+            bowler_found = True
+    if bowler_found == False:
+        BowlingScoreCard_i1.append([current_bowler, 0, 0, 0, 0])
+    bowler_found = False
     return bowler
 def play_game(team1, team2):
     global avg_fielding
@@ -220,18 +233,18 @@ def play_game(team1, team2):
     score = 0
     BatsmanScore = 0
     if random.randint(0,1) == 0:
-        print("{} won the toss and has decided to bat first".format(team1[0][1]))
+        print("{} won the toss and has decided to bat first".format(team1[0][1]), file=f)
         play_innings(team1, team2)
-        print("This closes the innings. {} have to make {} at a run rate of {} to win the game.".format(score, team2[0][0], score+1, (score+1)/20))
+        print("This closes the innings. {} have to make {} at a run rate of {} to win the game.".format( team2[0][0], score+1, (score+1)/20), file=f)
         over_number = 0
         wickets = 0
         score = 0
         BatsmanScore = 0
         play_innings(team2, team1)
     else:
-        print("{} won the toss and has decided to bat first".format(team2[0][1]))
+        print("{} won the toss and has decided to bat first".format(team2[0][1]), file=f)
         play_innings(team2, team1)
-        print("This closes the innings. {} have to make {} at a run rate of {} to win the game.".format(score, team1[0][0], score+1, (score+1)/20))
+        print("This closes the innings. {} have to make {} at a run rate of {} to win the game.".format( team1[0][0], score+1, (score+1)/20), file=f)
         over_number = 0
         wickets = 0
         score = 0
@@ -240,4 +253,7 @@ def play_game(team1, team2):
 
 def main():
     play_game(Team_Pakistan, Team_India)
+    print(BowlingScoreCard_i1)
 main()
+
+f.close
