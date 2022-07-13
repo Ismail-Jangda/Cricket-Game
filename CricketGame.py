@@ -5,35 +5,9 @@ import math
 import sys
 from Teams_and_Players import Team_Pakistan, Team_India
 
-#This variable keeps the overall score
-score = 0
-#This variable keeps the wickets that have fallen
-wickets = 0 
-#This variable keeps the current batsman score
-BatsmanScore = 0
-#This variable keeps the current over number
-over_number = 0
-#This variable is the average fielding level of the players in game. Used for fielding checks
-avg_fielding = 0
-#This variable defines the fielder selected
-fielder = ""
-
-#This list keeps track of bowling figures:
-#["Bowler Name", "Overs Bowled", Runs Given Away, Wickets Taken, Current Fitness ]
-BowlingScoreCard_i1 = []
-
-#This list keeps track of the scorecard:
-BowlingScoreCard_i2 = []
-
-#This is Current Bowler name
-current_bowler = ""
 
 
-f = open(r"C:\Users\Standard User\Google Drive\02 Personal Items\Python\Cricket-Game\Commentary", "a")
-
-
-
-#This class defines the player. I need to add fitness to this. 
+#This class defines the player. 
 class player:
     def __init__ (self, name = "Player_Name", Bat_Skill=0, Bowl_Skill=0, Field_Skill = 0, Fitness_Skill = 0, Fitness_Reduction = 0):
         self.name = name
@@ -83,43 +57,53 @@ def bowl_delivery(batsman, bowler, bowling_team):
     global score
     global wickets
     global fielder
+    global Over_runs
+    global Over_wickets
     batsman_points = batsman.Batting()
     bowler_points = bowler.Bowling()
     point_differential = batsman_points - bowler_points
     if point_differential >= 80:
         score += 6
         BatsmanScore += 6
+        Over_runs += 6
         print ("SIX! MASSIVE HIT. {} just picks it up and deposits over the boundary".format(batsman.name), file=f)
     elif point_differential >= 60:
         score += 4
         BatsmanScore += 4
+        Over_runs += 4
         print("FOUR! Slashes between point and the slip fielders.", file=f)
     elif point_differential >= 50:
         if field_check(bowling_team, "easy", "n") == "passed":
             score +=3
             BatsmanScore +=3
+            Over_runs += 3
             print("Batsman has scored 3 runs. {} puts in a dive to stop the boundary". format(fielder), file=f)
         else:
             score +=4
             BatsmanScore +=4
+            Over_runs +=4
             print("FOUR! {} has bungled an easy stop. Gives away an extra run.".format(fielder), file=f)           
     elif point_differential >= 30:
         if field_check(bowling_team, "easy", "n") == "passed":
             score +=2
             BatsmanScore +=2
+            Over_runs += 2
             print("Stopped at long off. Good running by {} to get to the ball. 2 runs added to the score".format(fielder), file=f)
         else:
             score +=4
             BatsmanScore +=4
+            Over_runs += 4
             print("{} isn't paying attention here. Ball slips through his fingers, and gives away a four instead of 2 runs.".format(fielder), file=f)
     elif point_differential >= 0:
         if field_check(bowling_team, "easy", "n") == "passed":
             score +=1
             BatsmanScore +=1
+            Over_runs += 1
             print("Driven straight to the man at deep midwicket. Good throw by {} to keep the batsman at 1 run".format(fielder), file=f)
         else:
             score +=4
             BatsmanScore +=4
+            Over_runs += 4
             print("{} drives it straight to {} who lets the ball go between his legs. A single at best is now a four.".format(batsman.name, fielder), file=f)
     elif point_differential >= -30:
         print("Dot ball. No runs added.", file=f)
@@ -127,6 +111,7 @@ def bowl_delivery(batsman, bowler, bowling_team):
         print("Wicket! Taken! {} has bowled a wonderful delivery and has completely and utterly bamboozled {}".format(bowler.name, batsman.name), file=f)
         print("{}       b       {}     {}".format(batsman.name, bowler.name, BatsmanScore), file=f)
         wickets += 1
+        Over_wickets +=1
         BatsmanScore = 0
     elif point_differential <= -65:
         wicket_chance = random.randint(-50,60)
@@ -134,6 +119,7 @@ def bowl_delivery(batsman, bowler, bowling_team):
             print("Loud appeal for an LBW, looks plumb... AND ITS GIVEN! {} heads back to the pavilion".format(batsman.name), file=f)
             print("{}       lbw       {}     {}".format(batsman.name, bowler.name, BatsmanScore), file=f)
             wickets += 1
+            Over_wickets +=1
             BatsmanScore = 0
         else:
             print("The bowling side have all gone up to appeal this, but not given. Umpire indicating that the delivery was a bit high.", file=f) 
@@ -144,6 +130,7 @@ def bowl_delivery(batsman, bowler, bowling_team):
                 print("Edged, and TAKEN! Excellent catch by the wicket keeper! {} shaking his head in disgust. What an unnecessary dismissal".format(batsman.name), file=f)
                 print("{}   c   {}   b   {}     {}".format(batsman.name, fielder, bowler.name, BatsmanScore), file=f)
                 wickets += 1
+                Over_wickets +=1
                 BatsmanScore = 0
             else:
                 print("DROPPED! Regulation catch dropped by the keeper. {} looks distraught. That really should be taken at this level of game play.".format(bowler.name), file=f)             
@@ -156,6 +143,7 @@ def bowl_delivery(batsman, bowler, bowling_team):
                 print("WHAT A CATCH!! {} slashed the ball through point, and {} leapt to pouch and incredible catch. Fortunate breakthrough by {}".format( batsman.name, fielder, bowler.name), file=f)
                 print("{}   c   {}   b   {}     {}".format(batsman.name, fielder, bowler.name, BatsmanScore), file=f)
                 wickets += 1
+                Over_wickets +=1
                 BatsmanScore = 0
             else:
                 print("OOF! A chance there slips through the fingers of {}. Was a difficult chance, but {} isn't happy about it.".format(fielder, bowler.name), file=f)             
@@ -167,16 +155,49 @@ def play_innings(batting_team, bowling_team):
     global wickets
     global score
     global BatsmanScore
+    global Over_runs
+    global current_bowler
+    global Over_wickets
     for y in range(20):
         bowl_over(batting_team, bowling_team)
+        update_bowling_scorecard(current_bowler, Over_runs, Over_wickets, bowling_team)
+        Over_runs = 0
+        Over_wickets = 0
         over_number += 1
+        if y == 19:
+            innings_end(BowlingScoreCard_i1)
         if wickets == 10:
-            over_number = 0
-            wickets = 0
-            score = 0
+            innings_end(BowlingScoreCard_i1)
             return
-    
-    
+
+
+def update_bowling_scorecard(bowler, over_runs, over_wickets, bowling_team):
+    global max_overs
+    for x in range(len(BowlingScoreCard_i1)):
+        if BowlingScoreCard_i1[x][0] == bowler:
+            BowlingScoreCard_i1[x][3] += over_runs
+            BowlingScoreCard_i1[x][4] += over_wickets
+            if over_runs == 0:
+                BowlingScoreCard_i1[x][2] += 1
+            if BowlingScoreCard_i1[x][1] == max_overs:
+                for x in range(len(bowling_team)):
+                    if bowling_team[x][0] == current_bowler:
+                        bowling_team[x][2] = -50
+
+def innings_end(bowlingScoreCard):
+    print("\n\nBowling Scorecard", file=f)
+    for x in range(len(bowlingScoreCard)):
+        print(bowlingScoreCard[x], file=f)
+    emptyScoreCard()
+
+def emptyScoreCard():
+    BowlingScoreCard_i1.clear()
+    # for x in range(len(BowlingScoreCard_i1)):
+    #     for y in range(0,5):
+    #         BowlingScoreCard_i1[x][y] = ""
+    #         BowlingScoreCard_i1[x][y] = ""
+
+        
 
 def bowl_over(batting_team, bowling_team):
     global over_number
@@ -187,7 +208,6 @@ def bowl_over(batting_team, bowling_team):
         print("Over: {}.{}".format(over_number, x+1), file=f ) 
         batsman = player(batting_team[wickets+1][0], batting_team[wickets+1][1],batting_team[wickets+1][2], batting_team[wickets+1][3], batting_team[wickets+1][4], batting_team[wickets+1][7])
         bowl_delivery(batsman, bowler, bowling_team)
-
         if wickets == 10:
             return
     print("At the end of the over, the score is {} for {}".format(score, wickets), file=f)
@@ -216,7 +236,7 @@ def pick_bowler(bowling_team):
             BowlingScoreCard_i1[x][1] += 1
             bowler_found = True
     if bowler_found == False:
-        BowlingScoreCard_i1.append([current_bowler, 0, 0, 0, 0])
+        BowlingScoreCard_i1.append([current_bowler, 1, 0, 0, 0])
     bowler_found = False
     return bowler
 def play_game(team1, team2):
@@ -251,9 +271,43 @@ def play_game(team1, team2):
         BatsmanScore = 0
         play_innings(team1, team2)   
 
-def main():
-    play_game(Team_Pakistan, Team_India)
-    print(BowlingScoreCard_i1)
-main()
 
-f.close
+if __name__ == "__main__":
+    #This variable keeps the overall score
+    score = 0
+    #This variable keeps the wickets that have fallen
+    wickets = 0 
+    #This variable keeps the current batsman score
+    BatsmanScore = 0
+    #This variable keeps the current over number
+    over_number = 0
+    #This variable is the average fielding level of the players in game. Used for fielding checks
+    avg_fielding = 0
+    #This variable defines the fielder selected
+    fielder = ""
+
+    #This list keeps track of bowling figures:
+    #["Bowler Name", "Overs Bowled", Runs Given Away, Wickets Taken, Current Fitness ]
+    BowlingScoreCard_i1 = []
+
+    #This list keeps track of the scorecard:
+    BowlingScoreCard_i2 = []
+
+    #This is Current Bowler name
+    current_bowler = ""
+
+    #Runs in the over
+    Over_runs = 0
+
+    #Wickets in the over
+    Over_wickets = 0
+
+    #Max overs per bowler
+    max_overs = 4
+
+    f = open(r"C:\Users\Standard User\Google Drive\02 Personal Items\Python\Cricket-Game\Commentary", "a")
+
+
+    play_game(Team_Pakistan, Team_India)
+
+    f.close
