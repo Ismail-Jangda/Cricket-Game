@@ -192,10 +192,6 @@ def innings_end(bowlingScoreCard):
 
 def emptyScoreCard():
     BowlingScoreCard_i1.clear()
-    # for x in range(len(BowlingScoreCard_i1)):
-    #     for y in range(0,5):
-    #         BowlingScoreCard_i1[x][y] = ""
-    #         BowlingScoreCard_i1[x][y] = ""
 
         
 
