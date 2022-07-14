@@ -3,7 +3,7 @@
 import random
 import math
 import sys
-from Teams_and_Players import Team_Pakistan, Team_India
+from Teams_and_Players import Team_Pakistan, Team_India, Team_ROW, Team_Asia
 
 
 
@@ -304,6 +304,6 @@ if __name__ == "__main__":
     f = open(r"C:\Users\Standard User\Google Drive\02 Personal Items\Python\Cricket-Game\Commentary", "a")
 
 
-    play_game(Team_Pakistan, Team_India)
+    play_game(Team_Pakistan, Team_ROW)
 
     f.close

@@ -39,3 +39,34 @@ Team_India=[
     ["Muhammad Shami", 15, 90, 80, 90, 10, "Fast",0],
     ["Anil Kumble", 35, 85, 70, 85, 11, "Spin",0]
     ]
+
+
+Team_Asia=[ 
+    ["Asian Legends", "Imran Khan", 6],
+    ["Sanath Jayasuria", 75, 60, 80, 90, 1, "Spin",0],
+    ["Virender Sehwag", 90, 10, 85, 90, 2, "Spin",0],
+    ["Kumar Sangakkara", 95, 35, 94, 95, 3, "Spin",0],
+    ["Sachin Tendulkar", 87, 10, 75, 85, 4, "Spin",0],
+    ["Inzamam ul-Haq", 89, 0, 85, 70, 5, "Spin",0],
+    ["MS Dhoni", 75, 0, 100, 100, 6, "Keep",0],
+    ["Imran Khan", 75, 95, 95, 95, 7, "Fast",0],
+    ["Wasim Akram", 70, 95, 95, 95, 8, "Fast",0],
+    ["Saqlain Mushtaq", 35 , 92, 75, 80, 9, "Spin",0],
+    ["Waqar Younis", 25, 93, 85, 95, 10, "Fast",0],
+    ["Muttiah Muralitharan", 20, 93, 65, 85, 11, "Spin",0]
+    ]
+    
+Team_ROW=[ 
+    ["Rest of the World Legends", "Kapil Dev", 7],
+    ["Greame Smith", 85, 0, 90, 100, 1, "Spin",0],
+    ["Matthew Hayden", 92, 0, 85, 100, 2, "Spin",0],
+    ["Brian Lara", 95, 0, 80, 100, 3, "Fast",0],
+    ["Jacques Kallis", 85, 70, 85, 100, 4, "Fast",0],
+    ["Viv Richards", 95, 0, 90, 85, 5, "Spin",0],
+    ["Garry Sobers", 83, 60, 80, 85, 6, "Fast",0],
+    ["Adam Gilchrist", 85, 0, 95, 95, 7, "Keep",0],
+    ["Shaun Pollock", 65, 87, 70, 90, 8, "Fast",0],
+    ["Shane Bond", 15 , 95, 95, 63, 9, "Fast",0],
+    ["Shane Warne", 15, 90, 80, 90, 10, "Spin",0],
+    ["Glenn McGrath", 10, 95, 70, 90, 11, "Fast",0]
+    ]
